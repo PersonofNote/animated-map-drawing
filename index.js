@@ -1,7 +1,6 @@
 const worldMapSvg = d3.select('#worldMap');
 
-const gMap = worldMapSvg.append('g'); // appended first so dots are drawn on top rather than behind
-const gDots = worldMapSvg.append('g');
+const gMap = worldMapSvg.append('g');
 const tooltip = d3.select('body').append('div')
   .attr('class', 'tooltip')
   .style('opacity', 0);
@@ -10,17 +9,13 @@ const projection = d3.geoMercator()
   .center([2, 47])
   .scale(100);
 
-const t = d3.transition()
-  .duration(750)
-  .ease(d3.easeLinear);
-
 function drawMap() {
   d3.json('https://PersonofNote.github.io/d3-visualization-map-test/world-110m.geojson', (data) => {
-    gMap.selectAll('path')
+    const land = gMap.selectAll('path')
       .data(data.features)
       .enter()
       .append('path')
-      .attr('class', 'landpath animating')
+      .attr('class', 'landpath')
       .attr('d', d3.geoPath()
         .projection(projection))
       .on('mouseover', (d) => {
@@ -33,18 +28,19 @@ function drawMap() {
       })
       .on('mouseout', (d) => {
         tooltip.transition()
-          .duration(600)
+          .duration(300)
           .style('opacity', 0);
       });
-    animateLand();
+    land.transition()
+      .ease(d3.easeLinear)
+      .duration(4000)
+      .style('stroke-dashoffset', 0)
+      .transition(200)
+      .style('fill', '#a9bcd0');
+    breakLand();
   });
 }
 
-function animateLand() {
-  const land = document.getElementsByClassName('landpath');
-  for (let i; i < land.length; i++) {
-    console.log(land);
-  }
-}
+
 
 drawMap();

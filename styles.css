@@ -25,13 +25,12 @@ body {
   stroke: var(--main);
   stroke-width: 1;
   stroke-dasharray: 1500;
-  stroke-dashoffset: 1500;
-  fill: var(--lightest);
+  fill: var(--lighter);
 }
 
 
 .landpath:hover {
-    fill: var(--lighter);
+    fill: var(--light);
 }
 
 
@@ -58,4 +57,18 @@ div.tooltip {
   border: 0px;		
   border-radius: 8px;			
   pointer-events: none;			
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+button {
+  margin: 1rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: var(--main);
+  border: 0;
+  color: var(--lightest);
 }

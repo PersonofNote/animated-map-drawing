@@ -31,16 +31,54 @@ function drawMap() {
           .duration(300)
           .style('opacity', 0);
       });
-    land.transition()
-      .ease(d3.easeLinear)
-      .duration(4000)
-      .style('stroke-dashoffset', 0)
-      .transition(200)
-      .style('fill', '#a9bcd0');
-    breakLand();
   });
 }
 
+function animateDraw() {
+  const land = gMap.selectAll('path');
+  land.style('stroke-dashoffset', 1500)
+    .style('fill', '#d8dbe2')
+    .transition()
+    .delay(200)
+    .ease(d3.easePolyIn)
+    .duration(4000)
+    .style('stroke-dashoffset', 0);
+}
 
+function animateMove() {
+  const land = gMap.selectAll('path');
+  land.style('fill', '#a9bcd0')
+    .attr('transform', (d) => randomizePos(d))
+    .transition()
+    .delay(200)
+    .duration(1000)
+    .ease(d3.easePolyOut)
+    .attr('transform', 'translate(0,0)');
+}
 
+function randomizePos(d) {
+  // TODO: Implement more elegant const declaration
+  const maxx = window.innerHeight * 2;
+  const minx = window.innerHeight;
+  const maxy = window.innerWidth * 2;
+  const miny = window.innerWidth;
+  let tx = Math.random() * (maxx - minx) + minx;
+  let ty = Math.random() * (maxy - miny) + miny;
+  tx *= Math.floor(Math.random() * 2) === 1 ? 1 : -1;
+  if (d.properties.name != 'Antarctica') {
+    ty *= Math.floor(Math.random() * 2) === 1 ? 1 : -1;
+  }
+  return `translate(${tx}, ${ty})`;
+}
+
+function addButtonHandlers() {
+  document.getElementById('draw-button').addEventListener('click', () => {
+    animateDraw();
+  });
+  document.getElementById('animate-button').addEventListener('click', () => {
+    animateMove();
+  });
+}
+
+addButtonHandlers();
 drawMap();

@@ -44,8 +44,8 @@ function drawMap() {
   drawDots();
 }
 
-function animateDraw() {
-  clearDots();
+function animateDraw(clear, callback) {
+  clear();
   const land = gMap.selectAll('path');
   land.style('stroke-dashoffset', 1500)
     .style('fill', '#d8dbe2')
@@ -54,11 +54,11 @@ function animateDraw() {
     .ease(d3.easePolyIn)
     .duration(4000)
     .style('stroke-dashoffset', 0)
-    .on('end', drawDots);
+  setTimeout(function(){ callback(); }, 4000);
 }
 
-function animateMove() {
-  clearDots();
+function animateMove(clear, callback) {
+  clear();
   const land = gMap.selectAll('path');
   land.style('fill', '#a9bcd0')
     .attr('transform', (d) => randomizePos(d))
@@ -66,8 +66,8 @@ function animateMove() {
     .delay(200)
     .duration(1000)
     .ease(d3.easePolyOut)
-    .attr('transform', 'translate(0,0)')
-    .on("end", drawDots);
+    .attr('transform', 'translate(0,0)');
+    setTimeout(function(){ callback(); }, 1100);
 }
 
 function randomizePos(d) {
@@ -85,15 +85,7 @@ function randomizePos(d) {
   return `translate(${tx}, ${ty})`;
 }
 
-function addButtonHandlers() {
-  document.getElementById('draw-button').addEventListener('click', () => {
-    animateDraw();
-  });
-  document.getElementById('animate-button').addEventListener('click', () => {
-    animateMove();
-  });
-}
-
+const colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"]
 
 function drawDots() {
   d3.json(meteorData, (data) => {
@@ -133,6 +125,16 @@ function drawDots() {
 function clearDots() {
   worldMapSvg.selectAll('circle').remove();
 }
+
+function addButtonHandlers() {
+  document.getElementById('draw-button').addEventListener('click', () => {
+    animateDraw(clearDots, drawDots);
+  });
+  document.getElementById('animate-button').addEventListener('click', () => {
+    animateMove(clearDots, drawDots);
+  });
+}
+
 
 addButtonHandlers();
 drawMap();

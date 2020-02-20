@@ -106,17 +106,19 @@ function drawDots() {
       .attr('transform', (d) => `translate(${projection([d.reclong, d.reclat])})`);
 
     dots.transition()
-      .delay(function(d,i){ return 1.3*i; })
+      .delay(function(d,i){ return 1.5*i; })
       .ease(d3.easeBackOut)
-      .duration(800)
+      .duration(500)
       .attr('r', 5);
 
     dots.on('mouseover', (d) => {
+      const yearDate = new Date(d.year)
+      const formatYear = yearDate.toLocaleDateString('en-US');
       tooltip.transition()
         .duration(200)
         .style('opacity', 0.9)
         .style('scale', 1);
-      tooltip.html(`Meteor ${d.name}, mass ${d.mass}, fell in ${d.year}`)
+      tooltip.html(`Meteor ${d.name}, mass ${d.mass}, fell on ${formatYear}`)
         .style('left', `${d3.event.pageX + 25}px`)
         .style('top', `${d3.event.pageY - 28}px`);
     })
@@ -125,13 +127,6 @@ function drawDots() {
           .duration(300)
           .style('opacity', 0);
       });
-    /*
-    const keys = Object.keys(data);
-    const values = Object.values(data);
-    for (let i = 0; i < keys.length; i += 1) {
-      console.log(values[i]);
-    }
-    */
   });
 }
 

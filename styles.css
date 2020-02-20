@@ -30,12 +30,16 @@ body {
 
 
 .landpath:hover {
-    fill: var(--light);
+    /*fill: var(--light);*/
 }
 
 .dot {
   fill: var(--main);
   stroke: var(--dark-accent);
+}
+
+.dot:hover {
+  fill: var(--light);
 }
 
 

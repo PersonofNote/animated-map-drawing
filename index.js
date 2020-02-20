@@ -1,11 +1,17 @@
 const worldMapSvg = d3.select('#worldMap');
 
+/**
+ *  Data from The Meteoritical Society
+ * https://catalog.data.gov/dataset/meteorite-landings-api/resource/d28bab4e-305b-46b9-8ced-af8494af0963
+ * 
+ */
 const meteorData = 'https://data.nasa.gov/resource/gh4g-9sfh.json';
 
 const gMap = worldMapSvg.append('g');
 const tooltip = d3.select('body').append('div')
   .attr('class', 'tooltip')
-  .style('opacity', 0);
+  .style('opacity', 0)
+  .style('scale', 0.1);
 
 const projection = d3.geoMercator()
   .center([2, 47])
@@ -47,8 +53,8 @@ function animateDraw() {
     .delay(200)
     .ease(d3.easePolyIn)
     .duration(4000)
-    .style('stroke-dashoffset', 0);
-    drawDots();
+    .style('stroke-dashoffset', 0)
+    .on('end', drawDots);
 }
 
 function animateMove() {
@@ -96,17 +102,20 @@ function drawDots() {
       .enter()
       .append('circle')
       .attr('class', 'dot')
-      .attr('r', 1)
+      .attr('r', 0)
       .attr('transform', (d) => `translate(${projection([d.reclong, d.reclat])})`);
 
     dots.transition()
-      .duration(1000)
+      .delay(function(d,i){ return 1.3*i; })
+      .ease(d3.easeBackOut)
+      .duration(800)
       .attr('r', 5);
 
     dots.on('mouseover', (d) => {
       tooltip.transition()
         .duration(200)
-        .style('opacity', 0.9);
+        .style('opacity', 0.9)
+        .style('scale', 1);
       tooltip.html(`Meteor ${d.name}, mass ${d.mass}, fell in ${d.year}`)
         .style('left', `${d3.event.pageX + 25}px`)
         .style('top', `${d3.event.pageY - 28}px`);
@@ -116,12 +125,13 @@ function drawDots() {
           .duration(300)
           .style('opacity', 0);
       });
-
+    /*
     const keys = Object.keys(data);
     const values = Object.values(data);
     for (let i = 0; i < keys.length; i += 1) {
       console.log(values[i]);
     }
+    */
   });
 }
 

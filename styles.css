@@ -33,6 +33,11 @@ body {
     fill: var(--light);
 }
 
+.dot {
+  fill: var(--main);
+  stroke: var(--dark-accent);
+}
+
 
 @media only screen and (max-width: 1068px) {
 
